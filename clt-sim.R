@@ -5,17 +5,69 @@ library(ggplot2)
 library(latex2exp)
 library(Pareto)
 library(ExtDist)
-# Define UI for application that draws a histogram
+
+
+theme_gp <- function(){ 
+    font <- "Optima" 
+    
+    theme_light() %+replace%   
+        
+        theme(
+            
+            #grid elements
+            panel.grid.major = element_blank(),   
+            panel.grid.minor = element_blank(),  
+            axis.ticks = element_blank(),  
+            
+            
+            #text elements
+            plot.title = element_text(       
+                family = font,          
+                size = 22,          
+                face = 'bold',  
+                hjust = 0.5,           
+                vjust = 1),           
+            
+            plot.subtitle = element_text(   
+                family = font,      
+                size = 14),        
+            
+            plot.caption = element_text(        
+                family = font,         
+                size = 9,           
+                hjust = 1),       
+            
+            axis.title = element_text(    
+                family = font,        
+                size = 10),            
+            
+            axis.text = element_text(   
+                family = font,      
+                size = 9),           
+            
+            axis.text.x = element_text(          
+                margin=margin(5, b = 10)),
+            
+            legend.position="top",
+            legend.justification="right"
+            
+        )
+}
+
 
 ui <- dashboardPage(
     
-    dashboardHeader(title = "The Magic of CLT",titleWidth = 200),
+    
+    
+    dashboardHeader(title = span("The Magic of CLT", 
+                                 span("dashboard", 
+                                      style = "color: white; font-size: 25px; font-family: 'Optima'")),titleWidth = 200),
     dashboardSidebar(width = 200, disable = TRUE),
     dashboardBody(
         useShinyjs(),
         withMathJax(),
         fluidRow(box( h4("Options"),
-             selectInput( inputId = "distr", label = h5("Distribution"), 
+             selectInput( inputId = "distr", label = "Distribution", 
                           choices = list("Normal" = "Normal", 
                                          "Exponential" = "Exponential", 
                                          "Gamma" = "Gamma",
@@ -31,19 +83,27 @@ ui <- dashboardPage(
                                          "Discrete Uniform" = "Discrete Uniform"),
                           selected = "Normal"),
              
-             sliderInput( inputId = "size", label = h5("Sample Size"),
+             sliderInput( inputId = "size", label = "Sample Size",
                           value = 50, min = 1, max = 10000,
                           step = 1),
-             sliderInput( inputId = "num_sim", label = h5("Number of Simulations"),
+             sliderInput( inputId = "num_sim", label = "Number of Simulations",
                           value = 100, min = 1, max = 10000,
                           step = 1),
-             radioButtons( inputId = "sum_mean", label = h5("Sum/Mean"),
+             radioButtons( inputId = "sum_mean", label = "Sum/Mean",
                           choices = list("Sum" = "Sum",
                                          "Mean" = "Mean"),
                           selected = "Sum"),
-             numericInput( inputId = "seed", label = h5("Choose the seed to set"),
-                          value = 12345, min = 1, max = 50000)),
-        box(h4(paste("Parameters" )),
+             numericInput( inputId = "seed", label = "Choose the seed to set",
+                          value = 12345, min = 1, max = 50000),
+             numericInput( inputId = "num_bins", label = "Select number of bins",
+                           value = 25, min = 1, max = 100),
+             textInput( inputId = "fill_color", label = "Bin Color",
+                        value = "plum"),
+             checkboxInput( inputId = "add_density", label = "Add density line", FALSE),
+             checkboxInput( inputId = "add_avg_vline", label = "Add average line", FALSE)
+
+             ),
+        box(h4( "Parameters" ),
             conditionalPanel(
                 condition = "input.distr == 'Normal'",
                 numericInput("mean",
@@ -168,6 +228,11 @@ ui <- dashboardPage(
         
         box( plotOutput("value") )
     ) ),
+    
+    tags$head(tags$style(HTML("
+    h4 {font-family: 'Optima'}
+    * {font-family: 'Optima'}
+                              ")))
 
     
     
@@ -212,13 +277,34 @@ server <- function(input, output) {
     
     
     output$value <- renderPlot({
-        res <- ggplot(data.frame()) + geom_histogram(aes(x = samp(), y = ..density..)) +
+        res <- ggplot(data.frame()) +
             xlab(paste0("Sample ", input$sum_mean, "s")) + 
             ylab("Density") + 
-            ggtitle(paste0("Histogram of Sample ", input$sum_mean, "s")) + 
-            theme(plot.title = element_text(hjust = 0.5, face = "bold",
-                                            size = 20))
+            ggtitle(paste0("Histogram of Sample ", input$sum_mean, "s"))+ 
+            geom_histogram(aes(x = samp(), y = ..density.. ) ,
+                           bins = input$num_bins, fill = input$fill_color)+
+            theme_gp()
         
+        if ( input$add_density & input$add_avg_vline){
+            res = res + geom_density(aes(x = samp(), y = ..density.. , colour = "Density")) +
+                geom_vline(aes(xintercept = mean(samp()), colour = "Average") ) + 
+                scale_colour_manual(name = "Type of Line",
+                                    values = c("Density" = "blue", 
+                                               "Average" = "red"))
+        }
+        
+        else if (input$add_density){
+            res = res + geom_density(aes(x = samp(), y = ..density.. , colour = "Density"))+ 
+                scale_colour_manual(name = "Type of Line",
+                                    values = c("Density" = "blue" ))
+        }
+        
+        else if (input$add_avg_vline){
+            res = res + geom_vline(xintercept = mean(samp()) )+
+                geom_vline(aes(xintercept = mean(samp()), colour = "Average") ) + 
+                scale_colour_manual(name = "Type of Line", 
+                                    values = c("Average" = "red"))
+        }
         res
     })
     

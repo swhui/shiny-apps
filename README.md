@@ -1,2 +1,3 @@
-# shiny-apps
-A showcase of the shiny apps I've created.
+# A Repertoire of Shiny Applications
+
+This project contains a collection of shiny web applications, which I have used while teaching.
