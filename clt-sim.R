@@ -60,7 +60,7 @@ ui <- dashboardPage(
     
     
     dashboardHeader(title = span("The Magic of CLT", 
-                                 span("dashboard", 
+                                 span(
                                       style = "color: white; font-size: 25px; font-family: 'Optima'")),titleWidth = 200),
     dashboardSidebar(width = 200, disable = TRUE),
     dashboardBody(

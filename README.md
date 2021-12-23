@@ -1,6 +1,6 @@
 # A Repertoire of Shiny Applications
 
-This project contains a collection of shiny web applications, which I have used while teaching and created for fun. Below is a list and description of each shiny web application
+This project contains a collection of shiny web applications, which I have used while teaching and created for fun. Below is a list and description of each shiny web application.
 
 ## [The Magic of CLT](https://swhui.shinyapps.io/CLT-Magic/)
 
