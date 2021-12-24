@@ -75,7 +75,7 @@ ui <- dashboardPage(
         useShinyjs(),
         withMathJax(),
         fluidRow(box( h4("Options"),
-                      sliderInput("min_max", label = h5("Slider Range"), 
+                      sliderInput("min_max", label = h5("Input Values"), 
                                   min = -10000, max = 10000, value = c(0, 1)),
                       textInput(inputId = "variable", label = h5("Variable:"),
                                 value = "x"),
