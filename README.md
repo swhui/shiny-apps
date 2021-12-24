@@ -9,3 +9,9 @@ The Central Limit Theorem states that under sufficient conditions, when we sum o
 ## [Euclidean Algorithm Calculator](https://swhui.shinyapps.io/euclidean-alg/)
 
 The Euclidean Algorithm is a method to compute the greatest common divisor (GCD) between two integers. The GCD is the largest number that divides both integers without a remainder.
+
+## [Plot a function](https://swhui.shinyapps.io/plotting_functions/)
+
+This is a simple application that plots functions between -10,000 to 10,000.
+
+
