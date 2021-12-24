@@ -6,3 +6,6 @@ This project contains a collection of shiny web applications, which I have used 
 
 The Central Limit Theorem states that under sufficient conditions, when we sum or take the mean of a sequence of independent random variables, their (normalized) sum approaches a normal distribution. Although a powerful and useful theorem, CLT is not the most intuitive. This application demonstrates CLT in action!
 
+## [Euclidean Algorithm Calculator](https://swhui.shinyapps.io/euclidean-alg/)
+
+The Euclidean Algorithm is a method to compute the greatest common divisor (GCD) between two integers. The GCD is the largest number that divides both integers without a remainder.
